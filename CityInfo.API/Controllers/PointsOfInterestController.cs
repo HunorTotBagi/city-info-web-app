@@ -111,8 +111,8 @@ namespace CityInfo.API.Controllers
                 return NotFound();
 
             pointOfInterestFromStore.Name = pointOfInterest.Name;
-            pointOfInterestFromStore.Description = pointOfInterest.Description;    
-        
+            pointOfInterestFromStore.Description = pointOfInterest.Description;
+
             return NoContent();
         }
 
@@ -137,7 +137,7 @@ namespace CityInfo.API.Controllers
                 };
 
             patchDocument.ApplyTo(pointOfInterestToPatch, ModelState);
-            
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -163,7 +163,7 @@ namespace CityInfo.API.Controllers
             _mailService.Send(
                 "Point of interest deleted.",
                 $"Point of interest {pointOfInterestFromStore.Name} with id {pointOfInterestFromStore.Id} was deleted.");
-            return NoContent(); 
+            return NoContent();
         }
     }
 }
