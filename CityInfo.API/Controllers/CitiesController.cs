@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Reflection.Metadata.Ecma335;
+using System.Text.Json;
 using AutoMapper;
 using CityInfo.API.Models;
 using CityInfo.API.Services;
@@ -49,6 +50,27 @@ namespace CityInfo.API.Controllers
                 return Ok(_mapper.Map<CityDto>(city));
 
             return Ok(_mapper.Map<CityWithoutPointsOfInterestDto>(city));
+        }
+
+        [HttpGet("letter/{letter}")]
+        public async Task<IActionResult> GetCityByLetter(string letter)
+        {
+            char useLetter = letter[0];
+
+            var cities = await _cityInfoRepository.GetCitiesAsync();
+
+            if (cities == null)
+                return NotFound();
+
+            // Filter cities that start with the specified letter
+            var filteredCities = cities.Where(c => c.Name.StartsWith(useLetter.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if (filteredCities.Count == 0)
+                return NotFound();
+
+            var cityDtos = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(filteredCities);
+
+            return Ok(cityDtos);
         }
     }
 }
