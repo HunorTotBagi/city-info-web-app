@@ -55,22 +55,16 @@ namespace CityInfo.API.Controllers
         [HttpGet("letter/{letter}")]
         public async Task<IActionResult> GetCityByLetter(string letter)
         {
-            char useLetter = letter[0];
+            char firstLetter = letter[0];
 
             var cities = await _cityInfoRepository.GetCitiesAsync();
 
-            if (cities == null)
-                return NotFound();
-
-            // Filter cities that start with the specified letter
-            var filteredCities = cities.Where(c => c.Name.StartsWith(useLetter.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+            var filteredCities = cities.Where(c => c.Name.StartsWith(firstLetter.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 
             if (filteredCities.Count == 0)
                 return NotFound();
 
-            var cityDtos = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(filteredCities);
-
-            return Ok(cityDtos);
+            return Ok(_mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(filteredCities));
         }
     }
 }
